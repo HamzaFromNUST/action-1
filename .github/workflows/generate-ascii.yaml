@@ -3,14 +3,14 @@ name: Generate ASCII Artwork
 on: push
 
 jobs:
-    first_job:
+  first_job:  # Indentation fixed here
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Repo
-      uses: actions/checkout@v4
+      - name: Checkout Repo
+        uses: actions/checkout@v4
 
-    - name: List Repo files
-      run: ls -ltra
+      - name: List Repo files
+        run: ls -ltra
 
-    - name: Executing Shell Script
-      run: ./ascii-script.sh
+      - name: Executing Shell Script
+        run: ./ascii-script.sh
