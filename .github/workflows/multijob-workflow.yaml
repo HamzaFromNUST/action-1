@@ -1,0 +1,47 @@
+name: Multi Job Workflow
+
+on: push
+
+jobs:
+    build_job_1:
+        runs-on: ubuntu-latest  # VM 1
+        steps:
+        - name: Install Cowsay Program
+          run: sudo apt-get install cowsay -y
+
+        - name: Execute Cowsay CMD
+          run: cowsay -f shark "Run for cover, I am BABY SHARK...DO DO DO DO" >> shark.txt
+
+        - name: Upload Shark text file
+          uses: actions/upload-artifact@v4
+          with:
+                name: shark text file
+                path: shark.txt
+
+    
+    test_job_2:
+        needs: build_job_1
+        runs-on: ubuntu-latest  # VM 2
+        steps:
+        - name: Download Shark text file
+          uses: actions/download-artifact@v4
+          with: 
+            name: shark text file
+
+        - name: Test File Exists
+          run: grep -i "shark" shark.txt
+        
+    deploy_job_3:
+        needs: [test_job_2]
+        runs-on: ubuntu-latest  # VM 3
+        steps:
+        - name: Download Shark text file
+          uses: actions/download-artifact@v4
+          with: 
+            name: shark text file
+
+        - name: Read File
+          run: cat shark.txt
+
+        - name: Deploy
+          run: echo Deploying ...
