@@ -1,27 +1,29 @@
 name: Matrix Configuration
 
 on:
-    push:
-    workflow_dispatch: 
-    
+  push:
+  workflow_dispatch:
+
 jobs:
-    deploy:
-        strategy:
-          fail-fast: false    #will not cancel all the jobs on failure of one job in queue
-          max-parallel: 2     #Run 2 jobs in parallel
-          matrix:
-            os: [ubuntu-latest, ubuntu-20.04, windows-latest]
-            images: [hello-world, alpine]
-            exclude:
-              - images: alpine
-                os: windows-latest
-            include:
-              - images: amd64/alpine
-                os: ubuntu-20.04
-        runs-on: ${{ matrix.os }}
-        steps:
-        - name: Echo Docker Details
-          run: docker info
-        
-        - name: Run Images on ${{ matrix.os }}
-          run: docker run ${{ matrix.images }}    
+  deploy:
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        os: [ubuntu-latest, ubuntu-20.04, windows-latest]
+        images: [hello-world:latest, alpine:latest]
+        exclude:
+          - images: alpine:latest
+            os: windows-latest
+        include:
+          - images: alpine:3.18  # Use a specific tag instead of amd64/alpine
+            os: ubuntu-20.04
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Echo Docker Details
+        run: docker info
+        shell: bash  # Ensure bash for consistency; adjust for Windows if needed
+
+      - name: Run Images on ${{ matrix.os }}
+        run: docker run --rm ${{ matrix.images }}  # Use --rm to clean up containers
+        shell: bash
