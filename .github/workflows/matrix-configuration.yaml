@@ -11,12 +11,12 @@ jobs:
           max-parallel: 2     #Run 2 jobs in parallel
           matrix:
             os: [ubuntu-latest, ubuntu-20.04, windows-latest]
-            image: [hello-world, alpine]
+            images: [hello-world, alpine]
             exclude:
-              - image: alpine
+              - images: alpine
                 os: windows-latest
             include:
-              - image: amd64/alpine
+              - images: amd64/alpine
                 os: ubuntu-20.04
         runs-on: ${{ matrix.os }}
         steps:
@@ -24,4 +24,4 @@ jobs:
           run: docker info
         
         - name: Run Images on ${{ matrix.os }}
-          run: docker run ${{ matrix.image }}    
+          run: docker run ${{ matrix.images }}    
